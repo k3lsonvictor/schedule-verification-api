@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "baseUrl": "./",
+    "paths": {
+      "@services/*": [
+        "src/services/*"
+      ],
+      "@routes/*": [
+        "src/routes/*"
+      ],
+      "@models/*": [
+        "src/models/*"
+      ]
+    },
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "ts-node": {
+    "files": true,
+    "swc": true
+  }
+}

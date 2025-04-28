@@ -1,0 +1,37 @@
+{
+  "name": "consultar-agendamentos",
+  "version": "1.0.0",
+  "main": "app.js",
+  "type": "commonjs",
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "scripts": {
+    "dev": "ts-node-dev --transpile-only -r tsconfig-paths/register src/app.ts",
+    "build": "tsc",
+    "start": "node dist/app.js"
+  },
+  "dependencies": {
+    "axios": "^1.9.0",
+    "body-parser": "^2.2.0",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "juice": "^11.0.1",
+    "mongoose": "^8.13.3",
+    "nodemailer": "^6.10.1",
+    "puppeteer": "^24.7.2"
+  },
+  "devDependencies": {
+    "@swc/core": "^1.11.22",
+    "@types/body-parser": "^1.19.5",
+    "@types/express": "^5.0.1",
+    "@types/mongoose": "^5.11.96",
+    "@types/node": "^22.15.0",
+    "@types/nodemailer": "^6.4.17",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
+  }
+}
