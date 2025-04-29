@@ -4,6 +4,7 @@
     "module": "CommonJS",
     "moduleResolution": "Node",
     "baseUrl": "./",
+    "resolveJsonModule": true,
     "paths": {
       "@services/*": [
         "src/services/*"

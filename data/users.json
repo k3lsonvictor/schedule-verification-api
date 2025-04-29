@@ -1,0 +1,19 @@
+[
+  {
+    "email": "k3lson@gmail.com",
+    "codes": [
+      {
+        "value": "123456",
+        "status": false
+      },
+      {
+        "value": "123123",
+        "status": false
+      },
+      {
+        "value": "123456789",
+        "status": false
+      }
+    ]
+  }
+]
