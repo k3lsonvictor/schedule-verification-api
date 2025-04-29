@@ -3,6 +3,8 @@ import * as nodemailer from "nodemailer";
 import * as dotenv from "dotenv";
 dotenv.config();
 import users from "../../data/users.json";
+import path from "path";
+const fs = require("fs");
 
 const data = users as { email: string; codes: { value: string, status: boolean }[] }[];
 
@@ -47,24 +49,39 @@ export async function scheduleVerification() {
     for (const code of user.codes) {
       try {
         console.log(`Verificando agendamento ${code} para o email ${user.email}...`);
-        const response = await axios.get(
-          `https://agendamentos.sus.fms.pmt.pi.gov.br/detail_scheduling/index?utf8=%E2%9C%93&number_id=${code}`
-        );
-        let html = response.data;
-
-        if (!html.startsWith("<!DOCTYPE html>")) {
-          html = "<!DOCTYPE html>\n" + html;
-        }
-
-        if (html.includes(ConfirmationText)) {
-          console.log("Consulta marcada! Enviando email...");
-          await sendEmail(
-            user.email,
-            `A consulta com o código ${code} foi agendada.`,
-            fixImagePaths(html)
+        if (!code.status) {
+          const response = await axios.get(
+            `https://agendamentos.sus.fms.pmt.pi.gov.br/detail_scheduling/index?utf8=%E2%9C%93&number_id=${code.value}`
           );
+
+          let html = response.data;
+
+          if (!html.startsWith("<!DOCTYPE html>")) {
+            html = "<!DOCTYPE html>\n" + html;
+          }
+
+          if (html.includes(ConfirmationText)) {
+            console.log("Consulta marcada! Enviando email...");
+            await sendEmail(
+              user.email,
+              `A consulta com o código ${code.value} foi agendada.`,
+              fixImagePaths(html)
+            );
+            // Atualiza o status para true após o envio bem-sucedido
+            code.status = true;
+            const filePath = path.join(__dirname, "../../data/users.json");
+
+            // Salva a atualização no arquivo JSON
+            fs.writeFileSync(
+              filePath,
+              JSON.stringify(data, null, 2),
+              "utf-8"
+            );
+          } else {
+            console.log("Consulta não marcada.");
+          }
         } else {
-          console.log("Consulta não marcada.");
+          console.log(`O código ${code.value} já foi enviado anteriormente.`);
         }
       } catch (error) {
         if (error instanceof Error) {
