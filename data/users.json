@@ -1,6 +1,6 @@
 [
   {
-    "email": "k3lson@gmail.com",
+    "email": "k3lson.victor@gmail.com",
     "codes": [
       {
         "value": "123456",
@@ -13,6 +13,15 @@
       {
         "value": "123456789",
         "status": false
+      }
+    ]
+  },
+  {
+    "email": "teste@gmail.com",
+    "codes": [
+      {
+        "value": "123123",
+        "status": true
       }
     ]
   }
