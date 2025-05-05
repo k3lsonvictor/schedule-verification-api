@@ -2,10 +2,13 @@ import express from "express";
 import bodyParser from "body-parser";
 import userRoutes from "./routes/user-routes";
 import { scheduleVerification } from "./services/schedules";
+import cors from "cors";
 
 const app = express();
 
 app.use(bodyParser.json());
+
+app.use(cors({ origin: "*" }));
 
 app.use("/users", userRoutes);
 
