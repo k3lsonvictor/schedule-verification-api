@@ -48,3 +48,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
     res.status(500).json({ message: "Erro ao cadastrar usuário", error });
   }
 };
+
+export const getTest = (req: Request, res: Response): void => {
+  res.status(200).json({ message: "Test endpoint is working!" });
+}
