@@ -1,0 +1,10 @@
+version: '3'
+services:
+  app:
+    image: scheduled-api:latest
+    container_name: scheduled_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
