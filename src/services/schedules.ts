@@ -2,17 +2,23 @@ import axios from "axios";
 import * as nodemailer from "nodemailer";
 import * as dotenv from "dotenv";
 dotenv.config();
-import users from "../../data/users.json";
 import path from "path";
-const fs = require("fs");
+import * as fs from "fs";
 
 const baseUrl = process.env.BASE_URL;
 
-const data = users as { email: string; codes: { value: string, status: boolean }[] }[];
 
 const ConfirmationText = "ENCAMINHAMENTO MARCADO";
 
 export async function scheduleVerification() {
+  const filePath = path.join(__dirname, "../../data/users.json");
+  if (!fs.existsSync(filePath)) {
+    console.warn(`User data file not found at ${filePath}`);
+    return;
+  }
+  const raw = fs.readFileSync(filePath, "utf-8");
+  const data: { email: string; codes: { value: string; status: boolean }[] }[] = JSON.parse(raw);
+
   const userPromises = data.map(async (user) => {
     for (const code of user.codes) {
       try {
@@ -37,8 +43,6 @@ export async function scheduleVerification() {
             );
             // Atualiza o status para true após o envio bem-sucedido
             code.status = true;
-            const filePath = path.join(__dirname, "../../data/users.json");
-
             // Salva a atualização no arquivo JSON
             fs.writeFileSync(
               filePath,
