@@ -3,8 +3,10 @@ import bodyParser from "body-parser";
 import userRoutes from "./routes/user-routes";
 import { scheduleVerification } from "./services/schedules";
 import cors from "cors";
+import { connectDB } from "./config/db";
 
 const app = express();
+connectDB();
 
 app.use(bodyParser.json());
 app.use((req, res, next) => {

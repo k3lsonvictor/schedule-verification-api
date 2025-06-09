@@ -2,27 +2,29 @@ import axios from "axios";
 import * as nodemailer from "nodemailer";
 import * as dotenv from "dotenv";
 dotenv.config();
-import path from "path";
-import * as fs from "fs";
-
+import { User } from "../models/user-model"; // Importa o model do usuário
+import mongoose from "mongoose";
 const baseUrl = process.env.BASE_URL;
-
 
 const ConfirmationText = "ENCAMINHAMENTO MARCADO";
 
-export async function scheduleVerification() {
-  const filePath = path.join(__dirname, "../../data/users.json");
-  if (!fs.existsSync(filePath)) {
-    console.warn(`User data file not found at ${filePath}`);
-    return;
+// Garante conexão com o banco antes de rodar a verificação
+async function ensureDbConnection() {
+  if (mongoose.connection.readyState === 0) {
+    await mongoose.connect(process.env.MONGO_URI || "mongodb://localhost:27017/seu_banco");
   }
-  const raw = fs.readFileSync(filePath, "utf-8");
-  const data: { email: string; codes: { value: string; status: boolean }[] }[] = JSON.parse(raw);
+}
 
-  const userPromises = data.map(async (user) => {
+export async function scheduleVerification() {
+  await ensureDbConnection();
+
+  // Busca todos os usuários e códigos
+  const users = await User.find({});
+
+  const userPromises = users.map(async (user) => {
     for (const code of user.codes) {
       try {
-        console.log(`Verificando agendamento ${code} para o email ${user.email}...`);
+        console.log(`Verificando agendamento ${code.value} para o email ${user.email}...`);
         if (!code.status) {
           const response = await axios.get(
             `${baseUrl}/detail_scheduling/index?utf8=%E2%9C%93&number_id=${code.value}`
@@ -43,12 +45,7 @@ export async function scheduleVerification() {
             );
             // Atualiza o status para true após o envio bem-sucedido
             code.status = true;
-            // Salva a atualização no arquivo JSON
-            fs.writeFileSync(
-              filePath,
-              JSON.stringify(data, null, 2),
-              "utf-8"
-            );
+            await user.save(); // Salva a atualização no banco
           } else {
             console.log("Consulta não marcada.");
           }
@@ -57,17 +54,14 @@ export async function scheduleVerification() {
         }
       } catch (error) {
         if (error instanceof Error) {
-          console.error(`Error fetching schedule ${code} para o email ${user.email}:`, error.message);
+          console.error(`Error fetching schedule ${code.value} para o email ${user.email}:`, error.message);
         } else {
-          console.error(`Error fetching schedule ${code} para o email ${user.email}:`, error);
+          console.error(`Error fetching schedule ${code.value} para o email ${user.email}:`, error);
         }
       }
-    };
-
-    // Aguarda todas as promessas de códigos para o usuário atual
+    }
   });
 
-  // Aguarda todas as promessas de usuários
   await Promise.all(userPromises);
 }
 
