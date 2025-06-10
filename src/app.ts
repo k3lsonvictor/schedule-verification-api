@@ -8,7 +8,7 @@ import { connectDB } from "./config/db";
 const app = express();
 connectDB();
 
-const allowedOrigin = "https://verificacao-de-agendamento-e3lce.ondigitalocean.app/"
+const allowedOrigin = "https://verificacao-de-agendamento-e3lce.ondigitalocean.app"
 
 app.use(cors({
   origin: allowedOrigin,
