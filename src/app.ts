@@ -9,7 +9,7 @@ const app = express();
 connectDB();
 
 app.use(cors({
-  origin: "https://verificacao-de-agendamento-e3lc...app", // substitua pelo domínio real do frontend
+  origin: "https://verificacao-de-agendamento-e3lce.ondigitalocean.app/", // substitua pelo domínio real do frontend
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
