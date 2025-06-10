@@ -8,14 +8,15 @@ import { connectDB } from "./config/db";
 const app = express();
 connectDB();
 
+const allowedOrigin = "https://verificacao-de-agendamento-e3lce.ondigitalocean.app/"
+
 app.use(cors({
-  origin: "https://verificacao-de-agendamento-e3lce.ondigitalocean.app/", // substitua pelo domínio real do frontend
+  origin: allowedOrigin,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }));
 
-app.options("*", cors());
 app.use(bodyParser.json());
 app.use("/users", userRoutes);
 
