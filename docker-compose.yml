@@ -6,6 +6,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    network_mode: host
     ports:
       - "8000:3000"
+    networks:
+      - dokploy-network
+
+networks:
+  dokploy-network:
+    external: true
